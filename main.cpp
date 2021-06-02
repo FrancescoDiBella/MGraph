@@ -16,7 +16,7 @@ int main(){
     }
 
     g.show();
-    std:: cout << "\nNumero vertici:\t" << g.getVetices() << " Numero archi: \t" <<g.getEdges() <<std::endl;
+    std:: cout << "\nNumero vertici:\t" << g.getVetices() << "\t Numero archi: \t" <<g.getEdges() <<std::endl;
 
     return 0;
 }
