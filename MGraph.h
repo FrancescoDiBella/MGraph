@@ -27,18 +27,22 @@ public:
     MGraph();
     // Distruttore;
     ~MGraph();
-    //Metodo che permette di insierire un elemento all'interno del grafo.
+    //Metodo che permette di inserire un elemento all'interno del grafo.
     void addNode(T val); //AddNode
     void addEdge(T u, T v);
-    //void Delete(T val);
+    void Delete(T val);
     void show();
     int getCapacity() const;
     int getVetices() const;
     int getEdges() const;
 
 
-    T& operator [] ( int index) ;
+    T& operator [] ( int index);
     T operator [] ( int index) const ;
-    //T getData(int index) const;
+
+    
+
+
+    
 
 };

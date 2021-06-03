@@ -124,5 +124,28 @@ void MGraph<T>::show(){
     std::cout <<std::endl;
 }
 
+template<class T>
+void MGraph<T>::Delete(T x){
+
+    int y = findIndex(x);
+
+    if(y<0) return;
+    
+    for(int i=0; i<V;i++){
+        if(mAdj[y][i] == true){
+            mAdj[y][i] = false;
+            this->E--;
+        }
+    }
+
+    for(int i=y; i<V-1;i++){
+        Keys[i] = Keys[i+1];
+    }
+    Keys[V] = NULL;
+    this->V--;
+
+    std::cout << "Vertice " <<x <<" eliminato" <<std::endl;
+}
+
 
 
