@@ -1,4 +1,6 @@
 #include "MGraph.h"
+#include "Queue.h"
+#include "Queue.cpp"
 #include <iostream>
 
 //Colore W -> White 
@@ -10,9 +12,11 @@
 //CAP è la capacità di default
 #define CAP 10
 
+#define MAX_INT capacity+1
+
 
 template <class T> // O(capacity^2)
-MGraph<T>::MGraph(int x) : capacity(x), V(0), E(0){
+MGraph<T>::MGraph(int x) : capacity(x), V(0), E(0), color(new int[capacity]), parent(new int[capacity]), distanza(new int[capacity]), coda(capacity){ //Aggiunta inizializzazione degli array : color, parent, distanza
     Keys = new T*[capacity];
     mAdj = new bool*[capacity];
 
@@ -27,7 +31,7 @@ MGraph<T>::MGraph(int x) : capacity(x), V(0), E(0){
 }
 
 template <class T>
-MGraph<T>::MGraph() : capacity(CAP), V(0), E(0){
+MGraph<T>::MGraph() : capacity(CAP), V(0), E(0), color(new int[capacity]), parent(new int[capacity]), distanza(new int[capacity]), coda(capacity){
     Keys = new T*[capacity];
     mAdj = new bool*[capacity];
 
@@ -145,6 +149,49 @@ void MGraph<T>::Delete(T x){
     this->V--;
 
     std::cout << "Vertice " <<x <<" eliminato" <<std::endl;
+}
+
+template <class T>
+void MGraph<T>::BFS(T s){
+    int i = findIndex(s);
+
+    if(i>=0) BFS_private(i);
+    else std::cout << "La chiave non è presente!c Ritenta.\n";
+}
+
+template <class T>
+void MGraph<T>::BFS_private(int u){
+    for(int i=0; i<V; i++){
+        color[i] = W;
+        parent[i] = -1;
+        distanza[i] = MAX_INT;
+    }
+
+    color[u] = G;
+    distanza[u] = 0;
+    coda.Enqueue(u);
+
+    while(!coda.isEmpty()){
+        int x = coda.Dequeue();
+        std::cout <<"Chiave dalla Dequeue " << *Keys[x] << " ";
+        for(int i = 0; i<V; i++){
+            if(mAdj[x][i]==true && color[i]==W){
+                color[i] = G;
+                std::cout <<"Chiave dalla Enqueue " << *Keys[i] << " ";
+                coda.Enqueue(i);
+                parent[i] = x;
+                distanza[i] = distanza[x]+1;
+            }
+        }
+
+        color[x] = B; 
+    }
+        for(int i =0; i<V; i++){
+            std::cout << "[ " <<i <<"] ->";
+            if(distanza[i]==MAX_INT) std::cout << "inf." <<std::endl;
+            else std::cout << distanza[i] <<std::endl;
+        }
+    
 }
 
 

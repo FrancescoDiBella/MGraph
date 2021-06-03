@@ -1,7 +1,7 @@
 #pragma once
+#include "Queue.h"
 
 template <class T>
-
 class MGraph{
 
 private:
@@ -10,9 +10,9 @@ private:
     T** Keys; //Matrice quadrata  di oggetti di tipo T
     bool ** mAdj; //Matrice di adiacenza
 
-    int *c; //matrice dei colori
-    int *p; //matrice deipadri
-    int* d; //matrice delle distanze
+    int *color; //matrice dei colori
+    int *parent; //matrice deipadri
+    int* distanza; //matrice delle distanze
 
     int *in; //matrice dei tempi d'ingresso
     int *out;// matrice tempi di uscita
@@ -20,6 +20,10 @@ private:
     int time; // variabile per i tempi
 
     int findIndex(T val);
+
+    void BFS_private(int u);
+
+    Queue<int> coda;
     
 public:
     // Costruttore al quale va passato un intero che determina la capacità, ovvero il numero massimo di Vertici.
@@ -36,13 +40,9 @@ public:
     int getVetices() const;
     int getEdges() const;
 
+    void BFS(T);
 
     T& operator [] ( int index);
     T operator [] ( int index) const ;
-
-    
-
-
-    
 
 };
