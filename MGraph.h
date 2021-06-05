@@ -13,17 +13,18 @@ private:
     int *color; //matrice dei colori
     int *parent; //matrice deipadri
     int* distanza; //matrice delle distanze
-
+    int* f;
     int *in; //matrice dei tempi d'ingresso
     int *out;// matrice tempi di uscita
 
     int time; // variabile per i tempi
-
+    Queue<int> coda;
     int findIndex(T val);
 
     void BFS_private(int u);
+    void DFS_visit(int u);
 
-    Queue<int> coda;
+    
     
 public:
     // Costruttore al quale va passato un intero che determina la capacità, ovvero il numero massimo di Vertici.
@@ -41,6 +42,9 @@ public:
     int getEdges() const;
 
     void BFS(T);
+    void DFS();
+    void ShowAdj();
+    void ShowF();
 
     T& operator [] ( int index);
     T operator [] ( int index) const ;

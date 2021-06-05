@@ -34,6 +34,7 @@ int main(){
     std:: cout << "\nNumero vertici:\t" << g.getVetices() << "\t Numero archi: \t" <<g.getEdges() <<std::endl;
     
     */
+   
    MGraph<char> g(10);
    char l [10];
    for(int i =0; i<10; i++){
@@ -48,5 +49,8 @@ int main(){
     g.show();
 
     g.BFS(l[randomic(10)]);
+    g.DFS();
+    g.ShowF();
+
     return 0;
 }

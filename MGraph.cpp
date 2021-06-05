@@ -16,7 +16,7 @@
 
 
 template <class T> // O(capacity^2)
-MGraph<T>::MGraph(int x) : capacity(x), V(0), E(0), color(new int[capacity]), parent(new int[capacity]), distanza(new int[capacity]), coda(capacity){ //Aggiunta inizializzazione degli array : color, parent, distanza
+MGraph<T>::MGraph(int x) : capacity(x), V(0), E(0), color(new int[capacity]), parent(new int[capacity]), distanza(new int[capacity]),f(new int[capacity]), coda(capacity){ //Aggiunta inizializzazione degli array : color, parent, distanza
     Keys = new T*[capacity];
     mAdj = new bool*[capacity];
 
@@ -31,7 +31,7 @@ MGraph<T>::MGraph(int x) : capacity(x), V(0), E(0), color(new int[capacity]), pa
 }
 
 template <class T>
-MGraph<T>::MGraph() : capacity(CAP), V(0), E(0), color(new int[capacity]), parent(new int[capacity]), distanza(new int[capacity]), coda(capacity){
+MGraph<T>::MGraph() : capacity(CAP), V(0), E(0), color(new int[capacity]), parent(new int[capacity]), distanza(new int[capacity]),f(new int[capacity]), coda(capacity){
     Keys = new T*[capacity];
     mAdj = new bool*[capacity];
 
@@ -135,9 +135,13 @@ void MGraph<T>::Delete(T x){
 
     if(y<0) return;
     
-    for(int i=0; i<V;i++){
+    for(int i=0; i<capacity;i++){
         if(mAdj[y][i] == true){
             mAdj[y][i] = false;
+            this->E--;
+        }
+        if(mAdj[i][y] == true){
+            mAdj[i][y] = false;
             this->E--;
         }
     }
@@ -148,7 +152,16 @@ void MGraph<T>::Delete(T x){
     Keys[V] = NULL;
     this->V--;
 
-    std::cout << "Vertice " <<x <<" eliminato" <<std::endl;
+    for(int i=0; i<capacity; i++){
+        for(int j=y; j<capacity-1; j++){
+            mAdj[i][j] = mAdj[i][j+1];
+        }
+    }
+    for(int i=y; i<capacity-1; i++){
+        for(int j=0; j<V; j++){
+            mAdj[i][j] = mAdj[i+1][j];
+        }
+    }
 }
 
 template <class T>
@@ -156,11 +169,12 @@ void MGraph<T>::BFS(T s){
     int i = findIndex(s);
 
     if(i>=0) BFS_private(i);
-    else std::cout << "La chiave non è presente!c Ritenta.\n";
+    else std::cout << "La chiave non è presente! Ritenta.\n";
 }
 
 template <class T>
 void MGraph<T>::BFS_private(int u){
+    
     for(int i=0; i<V; i++){
         color[i] = W;
         parent[i] = -1;
@@ -173,11 +187,9 @@ void MGraph<T>::BFS_private(int u){
 
     while(!coda.isEmpty()){
         int x = coda.Dequeue();
-        std::cout <<"Chiave dalla Dequeue " << *Keys[x] << " ";
         for(int i = 0; i<V; i++){
             if(mAdj[x][i]==true && color[i]==W){
                 color[i] = G;
-                std::cout <<"Chiave dalla Enqueue " << *Keys[i] << " ";
                 coda.Enqueue(i);
                 parent[i] = x;
                 distanza[i] = distanza[x]+1;
@@ -186,13 +198,63 @@ void MGraph<T>::BFS_private(int u){
 
         color[x] = B; 
     }
-        for(int i =0; i<V; i++){
-            std::cout << "[ " <<i <<"] ->";
-            if(distanza[i]==MAX_INT) std::cout << "inf." <<std::endl;
-            else std::cout << distanza[i] <<std::endl;
-        }
+    
+    for(int i =0; i<V; i++){
+        std::cout << "[ " <<i <<"] ->";
+        if(distanza[i]==MAX_INT) std::cout << "inf." <<std::endl;
+        else std::cout << distanza[i] <<std::endl;
+    }
     
 }
 
+template <class T>
+void MGraph<T>::ShowAdj(){
+    for(int i=0; i<V; i++){
+        for(int j=0; j<V; j++){
+            if(j<V-1)
+                std::cout << mAdj[i][j] << "__";
+            else
+                std::cout << mAdj[i][j];
+        }
+            
+        std::cout << std::endl;
+    }
+
+    std::cout << std::endl;
+}
+
+template <class T>
+void MGraph<T>::DFS(){
+   for(int i =0; i<V; i++){
+       color[i] = W;
+       parent[i] = -1;
+   }
+   time=0;
+   for(int i =0; i<V; i++){
+       if(color[i]==W)
+            DFS_visit(i);
+   }
+}
+
+template <class T>
+void MGraph<T>::DFS_visit(int s){
+   color[s] = G;
+   distanza[s] = time++;
+
+   for(int i =0; i<V; i++){
+       if(mAdj[s][i] == true && color[i]==W){
+           parent[i]=s;
+           DFS_visit(i);
+       }
+   }
+
+   color[s] = B;
+   f[s]=time;
+}
 
 
+template <class T>
+void MGraph<T>::ShowF(){
+   for(int i =0; i<V; i++)
+        std::cout << std::endl << " F di " << *Keys[i] << "___ " << f[i] << std::endl; 
+}
