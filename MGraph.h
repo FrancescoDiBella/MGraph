@@ -45,6 +45,7 @@ public:
     void DFS();
     void ShowAdj();
     void ShowF();
+    void ShowParent();
 
     T& operator [] ( int index);
     T operator [] ( int index) const ;

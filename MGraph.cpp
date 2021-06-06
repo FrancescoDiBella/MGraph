@@ -258,3 +258,13 @@ void MGraph<T>::ShowF(){
    for(int i =0; i<V; i++)
         std::cout << std::endl << " F di " << *Keys[i] << "___ " << f[i] << std::endl; 
 }
+
+template <class T>
+void MGraph<T>::ShowParent(){
+   for(int i =0; i<V; i++){
+       if(parent[i]!=-1)
+             std::cout << std::endl << "Keys["<<i<<"] :::> " << *Keys[i] << "\tPadre :::>" << *Keys[parent[i]] << std::endl;
+       else std::cout << std::endl << "Keys["<<i<<"] :::> " << *Keys[i] << " non ha predecessori.\n"; 
+   }
+}
+       

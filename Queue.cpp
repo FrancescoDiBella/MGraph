@@ -32,7 +32,6 @@ T Queue<T>::Dequeue(){
 
 template <class T>
 void Queue<T>::Stampa(){
-    std:: cout << "Testa: " <<head << " Coda: " <<tail <<" CAPACITY: " <<capacity <<std::endl;
     int j = head;
     for(int i = 0; i < numeroElementi; i++){
         std::cout << arr[j] << " ";
