@@ -250,6 +250,7 @@ void MGraph<T>::DFS_visit(int s){
 
    color[s] = B;
    f[s]=time;
+   //coda.Enqueue(s);
 }
 
 
@@ -267,4 +268,131 @@ void MGraph<T>::ShowParent(){
        else std::cout << std::endl << "Keys["<<i<<"] :::> " << *Keys[i] << " non ha predecessori.\n"; 
    }
 }
-       
+
+template <class T>
+int MGraph<T>::DFS_cycle(){
+    int cycle = 0;
+
+    for(int i =0; i<V; i++){
+       color[i] = W;
+       parent[i] = -1;
+    }
+
+    this->time = 0;
+
+    for(int i=0; i<V; i++)
+        if(color[i]==W)
+            cycle|=DFS_cycleVisit(i);
+
+    return cycle;
+}
+
+template <class T>
+int MGraph<T>::DFS_cycleVisit(int s){
+    int cycle=0;
+    color[s] = G;
+    distanza[s] = time++;
+
+    for(int i = 0; i<V; i++ ){
+        if(mAdj[s][i]==true){
+            if(color[i]==W){
+                parent[i] = s;
+                cycle|=DFS_cycleVisit(i);
+            }
+            if(color[i]==G)
+                cycle=1;
+            
+        }
+    }
+
+    color[s] = B;
+    f[s]=time++;
+
+    return cycle;
+}
+
+/*
+template<class T>
+void MGraph<T>::TopSort+(){
+    for(int i=0; i<V; i++){
+        std::cout << *Keys[coda.Dequeue()] << "_";
+    }
+}*/
+
+template<class T>
+void MGraph<T>::TopSort(){
+    int cycle = this->DFS_cycle();
+    if(cycle) std::cout << "Il Grafo contiene almeno un ciclo.\n";
+    else {
+        int *s = new int[V];
+        for(int i=0; i<V; i++) s[i] = i;
+        sort(s,V,f);
+        
+        for(int i=0; i<V; i++){
+            std::cout << "CHIAVE :::> " <<*Keys[s[i]] << " marca temporale uscita ::::> " << f[s[i]] << std::endl;
+        }
+    }
+}
+
+template<class T>
+void MGraph<T>::sort(int* a, int n, int* f){
+    for(int i =1; i<n; i++){
+        int j = i-1;
+        while(j>=0 && f[a[j]]<f[a[j+1]]){
+            int temp = a[j+1];
+            a[j+1] = a[j];
+            a[j] = temp;
+            j--;
+        }
+    }
+}
+
+template<class T>
+int MGraph<T>::getIndex(T x){
+    for(int i =0; i<V; i++){
+        if(*Keys[i]==x) return i;
+    }
+
+    return -1;
+}
+
+template<class T>
+int MGraph<T>::camminiSD(T x , T y){
+    int index = getIndex(x);
+    int search = getIndex(y);
+
+    int cycle = this->DFS_cycle();
+
+    if(cycle) {
+        std::cout << "Il Grafo contiene almeno un ciclo.\n";
+        return -1;
+    }
+
+    if(index==-1) return -1;
+
+    for(int i=0; i<V; i++){
+        color[i]=W;
+        parent[i]=-1;
+    }
+    pathCount = 0;
+    time=0;
+    
+    return camminiSDvisit(index,search);
+}
+
+template<class T>
+int MGraph<T>::camminiSDvisit(int u , int v){
+    color[u] = G;
+    distanza[u] = time++;
+    for(int i = 0; i<V; i++){
+        if(mAdj[u][i]==true){
+            if(i==v) pathCount++;
+            parent[i]=u;
+            camminiSDvisit(i,v);
+        }
+    }
+    color[u]=B;
+    f[u]=time++;
+
+    return this->pathCount;
+}

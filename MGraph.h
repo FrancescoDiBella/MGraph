@@ -13,9 +13,10 @@ private:
     int *color; //matrice dei colori
     int *parent; //matrice deipadri
     int* distanza; //matrice delle distanze
-    int* f;
+    int* f; //marche temporali
     int *in; //matrice dei tempi d'ingresso
     int *out;// matrice tempi di uscita
+    int pathCount = 0;
 
     int time; // variabile per i tempi
     Queue<int> coda;
@@ -23,6 +24,7 @@ private:
 
     void BFS_private(int u);
     void DFS_visit(int u);
+    int DFS_cycleVisit(int u);
 
     
     
@@ -40,6 +42,8 @@ public:
     int getCapacity() const;
     int getVetices() const;
     int getEdges() const;
+    int getIndex(T x);
+
 
     void BFS(T);
     void DFS();
@@ -47,6 +51,13 @@ public:
     void ShowF();
     void ShowParent();
 
+    int DFS_cycle();
+
+    int camminiSDvisit(int x, int y);
+    int camminiSD(T x, T y);
+
+    void TopSort();
+    void sort(int* a, int n, int* f);
     T& operator [] ( int index);
     T operator [] ( int index) const ;
 
