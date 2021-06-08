@@ -1,6 +1,9 @@
 #include "MGraph.h"
 #include "Queue.h"
 #include "Queue.cpp"
+#include "Nodo.cpp"
+#include "Stack.h"
+#include "Stack.cpp"
 #include <iostream>
 
 //Colore W -> White 
@@ -16,7 +19,7 @@
 
 
 template <class T> // O(capacity^2)
-MGraph<T>::MGraph(int x) : capacity(x), V(0), E(0), color(new int[capacity]), parent(new int[capacity]), distanza(new int[capacity]),f(new int[capacity]), coda(capacity){ //Aggiunta inizializzazione degli array : color, parent, distanza
+MGraph<T>::MGraph(int x) : capacity(x), V(0), E(0), color(new int[capacity]), parent(new int[capacity]), distanza(new int[capacity]),f(new int[capacity]), coda(capacity), radici(new int[capacity]){ //Aggiunta inizializzazione degli array : color, parent, distanza
     Keys = new T*[capacity];
     mAdj = new bool*[capacity];
     TAdj = new bool*[capacity];
@@ -34,7 +37,7 @@ MGraph<T>::MGraph(int x) : capacity(x), V(0), E(0), color(new int[capacity]), pa
 }
 
 template <class T>
-MGraph<T>::MGraph() : capacity(CAP), V(0), E(0), color(new int[capacity]), parent(new int[capacity]), distanza(new int[capacity]),f(new int[capacity]), coda(capacity){
+MGraph<T>::MGraph() : capacity(CAP), V(0), E(0), color(new int[capacity]), parent(new int[capacity]), distanza(new int[capacity]),f(new int[capacity]), coda(capacity), pila(new Stack<T>), radici(new int[capacity]){
     Keys = new T*[capacity];
     mAdj = new bool*[capacity];
     TAdj = new bool*[capacity];
@@ -237,8 +240,10 @@ void MGraph<T>::DFS(){
    }
    time=0;
    for(int i =0; i<V; i++){
-       if(color[i]==W)
-            DFS_visit(i);
+       if(color[i]==W){
+           currentRoot = i;
+           DFS_visit(i);
+       }
    }
 }
 
@@ -246,7 +251,7 @@ template <class T>
 void MGraph<T>::DFS_visit(int s){
    color[s] = G;
    distanza[s] = time++;
-
+   radici[s] = currentRoot;
    for(int i =0; i<V; i++){
        if(mAdj[s][i] == true && color[i]==W){
            parent[i]=s;
@@ -256,7 +261,7 @@ void MGraph<T>::DFS_visit(int s){
 
    color[s] = B;
    f[s]=time;
-   //coda.Enqueue(s);
+   pila.push(s);
 }
 
 
@@ -417,26 +422,46 @@ void MGraph<T>::DFS_T(){
     }
 
     time=0;
-    int s [V];
-    for(int i=0; i<V; i++)
-        s[i]=i;
-    
-    sort(s,V,f);
+    while(!pila.isEmpty()){
+        int i = pila.pop();
 
-    for(int i = 0; i<V; i++)
-        DFS_Tvisit(i, s);
+        if(color[i]==W){
+            currentRoot=i;
+            DFS_Tvisit(i);
+        }
+    }
 }
 
 template<class T>
-void MGraph<T>::DFS_Tvisit(int s, int* a){
+void MGraph<T>::DFS_Tvisit(int s){
     color[s]=G;
-    distanza[s]=time++;
+    radici[s]=currentRoot;
+
     for(int i=0; i<V; i++){
-        if(TAdj[s][a[i]]==true && color[a[i]]==W){
-            parent[a[i]] = s;
-            DFS_Tvisit(a[i],a);
+        if(TAdj[s][i]==true && color[i]==W){
+            parent[i] = s;
+            DFS_Tvisit(i);
         }
     }
     color[s]=B;
-    f[s]=time++;
+}
+
+template <class T>
+void MGraph<T>::printSCC(){
+    std::cout << "Componenti Fortemente Connesse : \n";
+
+    int flag=0;
+
+    for(int i =0; i<V; i++){
+        for(int j=0; j<V; j++)
+            if(radici[j]==i) {
+                flag=1;
+                std::cout << *Keys[j] << " ";
+            }
+        
+        if(flag){
+            std::cout <<"\n";
+            flag=0;
+        }
+    }
 }

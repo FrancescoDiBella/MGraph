@@ -54,14 +54,15 @@ int main(){
    g.addNode(1);
    g.addNode(3);
 
-   g.addEdge(5,3);
-    g.addEdge(3,7);
-    g.addEdge(7,4);
-    g.addEdge(5,1);
+   g.addEdge(7,3);
+    g.addEdge(3,8);
+    g.addEdge(8,7);
+    g.addEdge(8,1);
  g.addEdge(1,5);
-  g.addEdge(1,8);
-   g.addEdge(8,8);
-    g.addEdge(7,8);
+  g.addEdge(5,4);
+   g.addEdge(4,1);
+  
+   
 
 
 
@@ -74,7 +75,7 @@ int main(){
     g.DFS();
     g.calcolaTrasposta();
     g.DFS_T();
-    g.ShowParent();
+    g.printSCC();
     //g.ShowParent();
     //g.TopSort();
     /*int source = 5;

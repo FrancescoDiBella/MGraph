@@ -1,5 +1,6 @@
 #pragma once
 #include "Queue.h"
+#include "Stack.h"
 
 template <class T>
 class MGraph{
@@ -13,14 +14,16 @@ private:
 
     int *color; //matrice dei colori
     int *parent; //matrice deipadri
-    int* distanza; //matrice delle distanze
-    int* f; //marche temporali
+    int * distanza; //matrice delle distanze
+    int * f; //marche temporali
     int *in; //matrice dei tempi d'ingresso
-    int *out;// matrice tempi di uscita
+    int *radici;// matrice tempi di uscita
+    int currentRoot = 0;
     int pathCount = 0;
 
     int time; // variabile per i tempi
     Queue<int> coda;
+    Stack<int> pila;
     int findIndex(T val);
 
     void BFS_private(int u);
@@ -59,9 +62,10 @@ public:
 
     void calcolaTrasposta();
     void DFS_T();
-    void DFS_Tvisit(int x, int* a);
+    void DFS_Tvisit(int );
 
     void TopSort();
+    void printSCC();
     void sort(int* a, int n, int* f);
     T& operator [] ( int index);
     T operator [] ( int index) const ;
