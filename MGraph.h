@@ -9,6 +9,7 @@ private:
     int capacity, V, E; //Capacità massima del grafo, numero attuale di nodi, numero attuale di archi
     T** Keys; //Matrice quadrata  di oggetti di tipo T
     bool ** mAdj; //Matrice di adiacenza
+    bool ** TAdj; //Matrice di adiacenza
 
     int *color; //matrice dei colori
     int *parent; //matrice deipadri
@@ -55,6 +56,10 @@ public:
 
     int camminiSDvisit(int x, int y);
     int camminiSD(T x, T y);
+
+    void calcolaTrasposta();
+    void DFS_T();
+    void DFS_Tvisit(int x, int* a);
 
     void TopSort();
     void sort(int* a, int n, int* f);

@@ -19,14 +19,17 @@ template <class T> // O(capacity^2)
 MGraph<T>::MGraph(int x) : capacity(x), V(0), E(0), color(new int[capacity]), parent(new int[capacity]), distanza(new int[capacity]),f(new int[capacity]), coda(capacity){ //Aggiunta inizializzazione degli array : color, parent, distanza
     Keys = new T*[capacity];
     mAdj = new bool*[capacity];
+    TAdj = new bool*[capacity];
 
     for(int i=0; i<capacity; i++){
         mAdj[i] = new bool[capacity];
+        TAdj[i] = new bool[capacity];
         Keys[i] = NULL;
 
-        for(int j=0; j<capacity; j++)
+        for(int j=0; j<capacity; j++){
             mAdj[i][j] = false;
-            
+            TAdj[i][j] = false;
+        }       
     }
 }
 
@@ -34,14 +37,17 @@ template <class T>
 MGraph<T>::MGraph() : capacity(CAP), V(0), E(0), color(new int[capacity]), parent(new int[capacity]), distanza(new int[capacity]),f(new int[capacity]), coda(capacity){
     Keys = new T*[capacity];
     mAdj = new bool*[capacity];
+    TAdj = new bool*[capacity];
 
     for(int i=0; i<capacity; i++){
         mAdj[i] = new bool[capacity];
+        TAdj[i] = new bool[capacity];
         Keys[i] = NULL;
 
-        for(int j=0; j<capacity; j++)
-            mAdj[i][j] = 0;
-            
+        for(int j=0; j<capacity; j++){
+            mAdj[i][j] = false;
+            TAdj[i][j] = false;
+        }
     }
 }
 
@@ -382,7 +388,6 @@ int MGraph<T>::camminiSD(T x , T y){
 
 template<class T>
 int MGraph<T>::camminiSDvisit(int u , int v){
-    color[u] = G;
     distanza[u] = time++;
     for(int i = 0; i<V; i++){
         if(mAdj[u][i]==true){
@@ -391,8 +396,47 @@ int MGraph<T>::camminiSDvisit(int u , int v){
             camminiSDvisit(i,v);
         }
     }
-    color[u]=B;
-    f[u]=time++;
 
     return this->pathCount;
+}
+
+template<class T>
+void MGraph<T>::calcolaTrasposta(){
+    for(int i=0; i<V; i++){
+        for(int j =0; j<V; j++){
+            TAdj[i][j] = mAdj[j][i];
+        }
+    }
+}
+
+template<class T>
+void MGraph<T>::DFS_T(){
+    for(int i=0; i<V; i++){
+        color[i]=W;
+        parent[i]=-1;
+    }
+
+    time=0;
+    int s [V];
+    for(int i=0; i<V; i++)
+        s[i]=i;
+    
+    sort(s,V,f);
+
+    for(int i = 0; i<V; i++)
+        DFS_Tvisit(i, s);
+}
+
+template<class T>
+void MGraph<T>::DFS_Tvisit(int s, int* a){
+    color[s]=G;
+    distanza[s]=time++;
+    for(int i=0; i<V; i++){
+        if(TAdj[s][a[i]]==true && color[a[i]]==W){
+            parent[a[i]] = s;
+            DFS_Tvisit(a[i],a);
+        }
+    }
+    color[s]=B;
+    f[s]=time++;
 }
